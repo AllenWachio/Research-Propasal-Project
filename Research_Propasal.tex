@@ -1,0 +1,769 @@
+\documentclass[12pt,a4paper]{article}
+
+% ── Packages ──────────────────────────────────────────────────────────────────
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{hyperref}
+\usepackage{setspace}
+\usepackage{parskip}
+\usepackage{titlesec}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage{amsmath}
+\usepackage{eurosym}
+
+% ── Formatting ─────────────────────────────────────────────────────────────────
+\onehalfspacing
+\hypersetup{colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue}
+
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.5em}{}
+
+% ══════════════════════════════════════════════════════════════════════════════
+\begin{document}
+
+    \begin{titlepage}
+        \centering
+        \vspace*{2cm}
+        {\Large\bfseries RESEARCH PROPOSAL \par}
+        \vspace{1.5cm}
+        {\large\bfseries AN AUTONOMOUS GEOFENCE-TRIGGERED IMPLANTABLE
+            SEDATIVE-DELIVERY DEVICE FOR IMMEDIATE IMMOBILIZATION OF HABITUAL
+            WILDLIFE TRESPASSERS \par}
+        \vspace{2cm}
+        \vfill
+    \end{titlepage}
+
+    % ══════════════════════════════════════════════════════════════════════════════
+    \begin{abstract}
+        \noindent
+        Human-wildlife conflict (HWC) represents one of the most urgent and complex challenges
+        at the interface of conservation and human livelihoods globally. In regions adjacent to
+        game parks and wildlife reserves, conflict animals routinely trespass into human
+        settlements, resulting in crop destruction, livestock predation, serious injury, and
+        fatalities on both sides of the divide. In India alone, over 500 people are killed annually
+        through negative human-elephant interactions, with over 50,000 farming families
+        experiencing crop losses amounting to approximately one million hectares per year
+        \cite{muliya2026}. In sub-Saharan Africa, nine-year KWS records from Kenya show that
+        elephants alone account for 79\,\% of reported HWC incidents, with peak conflict
+        occurring during dry-season months as animals disperse from protected areas in search of
+        food and water \cite{manoa2020}. Retaliatory killings further endanger conflict-prone
+        megafauna such as elephants, big cats, hippopotami, and members of the Big Five.
+        Current response frameworks are predominantly reactive, triggered only after an animal
+        has already entered human-occupied spaces and caused harm.
+
+        Despite remarkable advances in GPS satellite telemetry-based early warning systems
+        \cite{muliya2026}, GPS-enabled virtual geofencing for animal management \cite{gilbert2026},
+        low-cost Arduino-based GPS tracking devices \cite{imamoglu2022}, biocompatible implantable
+        MEMS drug-delivery micropumps \cite{gutierrez2014}, fully implantable robotic drug
+        delivery systems \cite{iacovacci2021}, and autonomous closed-loop drug delivery devices
+        \cite{ciatti2024}, no study has yet combined geofence boundary-detection with autonomous
+        implantable sedative delivery for wildlife conflict management. This gap leaves
+        immobilization response time entirely dependent on human logistics.
+
+        This research aims to design, develop, and validate an autonomous geofence-triggered
+        implantable sedative-delivery device that can immediately immobilize habitual wildlife
+        trespassers upon crossing a pre-defined virtual boundary, without requiring human
+        intervention at the moment of immobilization. The device is intended for subcutaneous
+        implantation in recidivist conflict animals, particularly big cats, hippopotami, and members
+        of the Big Five. The research will proceed in three phases: device engineering, large-animal
+        biocompatibility assessment, and controlled field trials. The ultimate outcome is a
+        technology that reduces human casualty rates, minimises crop and property damage,
+        decreases retaliatory animal killings, and represents a paradigm shift from reactive to
+        proactive HWC management.
+    \end{abstract}
+
+    \newpage
+    \tableofcontents
+    \newpage
+
+    % ══════════════════════════════════════════════════════════════════════════════
+    \section{Introduction}
+
+    \subsection{Background}
+
+    Human-wildlife conflict is a globally recognised conservation crisis arising wherever the
+    spatial and resource requirements of humans and wildlife overlap. As habitat loss,
+    agricultural expansion, and human population growth drive communities alongside
+    previously wild landscapes, encounters between people and large, dangerous animals have
+    escalated dramatically \cite{muliya2026}. The consequences are profound: local communities
+    lose crops, livestock, and lives; wildlife populations face retaliatory persecution that
+    threatens conservation goals; and public tolerance for wildlife erodes, undermining the
+    social licence for conservation.
+
+    The problem is especially acute around game parks and forest corridors in sub-Saharan
+    Africa and South Asia. In Kenya, the severity and economic cost of HWC is well
+    documented. A nine-year analysis of Kenya Wildlife Service (KWS) records across Kajiado
+    and Laikipia Counties identified 953 valid HWC cases between 2010 and 2018, with an
+    overall rising trend peaking in 2017 \cite{manoa2020}. Wildlife threats to human life,
+    crop destruction, and livestock predation contributed 65.7\,\%, 21.7\,\%, and 7.7\,\% of
+    incidents respectively, with elephants responsible for 79\,\% of all reported cases. Across
+    the preceding decade, Kenya recorded 305 human deaths attributable to HWC, while
+    between 2014 and 2017 alone, the national toll reached 452 human deaths, 4,555 injuries,
+    5,073 crop damage incidents, and 3,012 livestock predation events, representing a combined
+    compensation liability of KES\,3.4\,billion (approximately USD\,317\,million) \cite{manoa2020}.
+    In Kajiado County specifically, the most common conflict species include elephants,
+    hyenas, buffaloes, leopards, baboons, monkeys, snakes, and crocodiles, with elephants
+    responsible for 46.2\,\% of conflicts, predominantly through crop raiding \cite{mbiki2025}.
+
+    The socio-economic and ecological consequences of HWC extend beyond the immediate
+    incident. Crop destruction, livestock depredation, and infrastructure damage place heavy
+    financial burdens on affected communities, exacerbating poverty and discouraging
+    conservation participation \cite{mbiki2025}. Retaliatory killings of predators cascade
+    ecologically, producing herbivore overpopulation, habitat degradation, and biodiversity
+    loss. HWC also generates fear, insecurity, and inter-community tensions that destabilise
+    socio-economic landscapes and erode the psychological wellbeing of affected families
+    \cite{mbiki2025}. Research further shows that negative perceptions of wildlife --- where
+    animals are increasingly seen as threats rather than assets --- directly undermine
+    conservation outcomes by reducing community support for protected areas and wildlife
+    management programmes \cite{basak2023}.
+
+    Understanding the human dimension of HWC is recognised as essential for effective
+    management. A systematic review of 124 peer-reviewed studies on urban HWC found that
+    managing conflicts requires understanding local attitudes and behaviours, since community
+    perceptions of wildlife directly determine whether management interventions will be
+    accepted or resisted \cite{basak2023}. Property damage was identified as the most commonly
+    reported conflict (25\,\% of studies), followed by danger to human life (12.7\,\%) and
+    danger to pets (11\,\%). Critically, Basak et al.\ identify that delayed or insufficient
+    compensation actively worsens community attitudes toward wildlife, feeding a cycle of
+    resentment and retaliatory killing \cite{basak2023}. This finding is corroborated at the
+    policy level in Kenya: the government has acknowledged that between 2013 and 2022,
+    KWS paid only KES\,2.7\,billion to HWC victims over nearly a decade, with victims
+    sometimes waiting up to eight years for compensation, fuelling hostility toward wildlife
+    conservation \cite{kenya2025}. In response, the Kenyan government launched a digitised
+    compensation platform in 2025 targeting payment within four months of an incident and
+    mandating that all reports of loss be completed within 90\,days \cite{kenya2025}. Supporting
+    operational reforms include the recruitment of 1,500 new game rangers, procurement of
+    100 vehicles for KWS, and an extension of wildlife fencing by 200\,km \cite{kenya2025}.
+    These policy developments reflect the urgency with which governments are now approaching
+    HWC, and highlight the need for technological solutions that can complement, rather than
+    merely supplement, institutional responses.
+
+    In India, which hosts over 60\,\% of the global wild elephant population, HEC causes over
+    500 human deaths and crop losses of approximately one million hectares annually, with
+    ex-gratia compensation averaging USD\,4.79\,million per year between 2009 and 2020
+    \cite{muliya2026}. In Africa, similar dynamics characterise conflicts involving lions,
+    leopards, rhinoceroses, buffaloes, hippopotami, and elephants. The animals most frequently
+    involved in recurring conflicts are ``habitual trespassers''---individuals that have learned to
+    exploit human-dominated landscapes and repeatedly return despite deterrence efforts.
+
+    A convergence of technologies from disparate fields now offers a compelling pathway to a
+    fundamentally new solution. Virtual fencing technology uses GPS-enabled collars to enforce
+    digital spatial boundaries on free-ranging animals via conditioned stimuli \cite{gilbert2026}.
+    GPS satellite telemetry-based early warning systems have demonstrated that real-time
+    tracking of conflict-prone animals can dramatically reduce HWC severity \cite{muliya2026}.
+    Low-cost Arduino-based GPS tracking platforms have further demonstrated that
+    positionally accurate animal tracking---within 2--3\,m of industrial-grade GPS benchmarks---
+    can be achieved at a fraction of the cost of commercial devices, making real-time wildlife
+    monitoring accessible to under-resourced wildlife agencies \cite{imamoglu2022}. Implantable
+    MEMS drug delivery devices have established the biocompatibility and reliability of
+    miniaturised programmable drug pumps in large animal models \cite{gutierrez2014}. Fully
+    implantable robotic systems have demonstrated non-invasive drug reservoir refilling through
+    ingestible magnetic capsules, extending device operational life without surgical re-entry
+    \cite{iacovacci2021}. Autonomous closed-loop implantable devices have proven that
+    sensor-triggered autonomous drug delivery can rescue freely moving large animals from
+    life-threatening events within minutes \cite{ciatti2024}. A comprehensive review of the
+    BioMEMS field documents the rich landscape of biocompatible materials, miniaturised
+    actuation systems, wireless power transfer, and closed-loop sensing architectures that
+    underpin next-generation implantable devices \cite{abhinav2025}. Collectively, these bodies
+    of work provide strong technical and conceptual foundations for a novel approach to the
+    delayed-tranquilization problem.
+
+    \subsection{Problem Statement}
+
+    When encroachment by a conflict animal occurs near game parks and wildlife reserves, it
+    currently takes a very long time to safely capture the animal. During this period, serious
+    injuries or fatalities to humans, a large number of animal deaths, and extensive crop
+    damage are recorded. Wildlife managers must first track the animal using GPS collars and
+    implants and then sedate it using dart projectors, blowpipe CO\textsubscript{2}-powered
+    rifles, or projectile syringes. This process can take anywhere from a few hours to several
+    months when managing multiple conflict animals. Seasonality compounds the challenge:
+    HWC incidents peak during dry-season months of July, January, and October, when wildlife
+    disperses most aggressively into human settlements, placing maximum pressure on response
+    teams that are already stretched across large rangeland areas \cite{manoa2020}. The
+    response is necessarily reactive and entirely dependent on human logistics, while casualties
+    accumulate. No autonomous device currently exists that can immediately immobilize a
+    conflict animal the moment it crosses a designated boundary without requiring the physical
+    presence of a trained human responder.
+
+    \subsection{Research Objectives}
+
+    This research addresses the identified gap through the following objectives:
+
+    \begin{enumerate}
+        \item To design and develop a GPS geofence-triggered implantable sedative delivery
+        device suitable for subcutaneous implantation in habitual wildlife trespassers,
+        including big cats, hippopotami, and members of the Big Five.
+        \item To evaluate the biocompatibility, structural integrity, and safety profile of
+        the device in appropriate large animal models over up to twelve months.
+        \item To assess the efficacy of the device in triggering autonomous immobilization
+        within an operationally acceptable timeframe upon geofence boundary crossing.
+        \item To compare the response time, effectiveness, and safety outcomes of the proposed
+        device against conventional dart-based tranquilization methods currently used in
+        HWC management.
+        \item To identify the ethical, operational, and regulatory considerations governing
+        deployment of autonomous implantable immobilization devices in wildlife management.
+    \end{enumerate}
+
+    % ══════════════════════════════════════════════════════════════════════════════
+    \section{Literature Review}
+
+    \subsection{Human-Wildlife Conflict: Scale, Drivers, and Impacts}
+
+    Human-wildlife conflict is an escalating global conservation and humanitarian challenge.
+    At its core, HWC emerges wherever the spatial, temporal, or resource requirements of
+    wildlife and humans overlap \cite{muliya2026}. Key drivers include accelerating habitat
+    fragmentation, agricultural expansion into wildlife corridors, human population growth in
+    peri-protected area zones, and the recovery or expansion of large wildlife populations in
+    human-dominated landscapes. The consequences are asymmetrically borne by rural
+    communities, who experience crop loss, livestock depredation, physical injury, death, and
+    psychological distress.
+
+    In Kenya, the typology and economic magnitude of HWC have been quantified through
+    systematic analysis of KWS archival records across Kajiado and Laikipia Counties
+    \cite{manoa2020}. Over the 2010--2018 period, wildlife threats to human life accounted for
+    65.7\,\% of 953 documented incidents, with crop destruction contributing 21.7\,\% and
+    livestock predation 7.7\,\%. Elephants were responsible for the largest share of all
+    incidents (79\,\%, $n=753$), attributable to their large body size, extensive home ranges
+    (estimated at 5,200--7,790\,km\textsuperscript{2} in the Amboseli landscape), and high
+    daily resource requirements of approximately 150\,kg of vegetation and 190\,litres of
+    water \cite{manoa2020}. Critically, approximately 80\,\% of elephant range in Kenya lies
+    outside protected areas, ensuring frequent contact with human settlements. Baboons were
+    the second most conflict-prone species (6.9\,\%, $n=66$), exploiting a wide habitat range
+    and omnivorous diet to raid crops, attack livestock, and destroy property \cite{manoa2020}.
+    Human attacks in Kajiado County alone resulted in six deaths and 21 injuries over the
+    nine-year period, generating compensation claims equivalent to KES\,82.5\,million; the
+    responsible species included elephants (43\,\% of combined fatalities and injuries), snakes
+    (17\,\%), and buffaloes (17\,\%).
+
+    In South Asia, the Asian elephant (\textit{Elephas maximus}) exemplifies the scale and
+    complexity of HWC. India hosts an estimated 25,000--30,000 individuals across
+    163,000\,km\textsuperscript{2} and is home to the single largest population of wild
+    elephants globally, classified as Endangered by the IUCN \cite{muliya2026}. Between 2019
+    and 2021, the state of Karnataka alone recorded approximately 35,000 crop-raiding incidents
+    and over 50 human fatalities attributable to elephants, with ex-gratia payments totalling
+    approximately USD\,4.1\,million to affected communities \cite{muliya2026}. Nationally, over
+    50,000 farming families are affected annually, with crop losses estimated at one million
+    hectares per year and over 500 human deaths annually from negative human-elephant
+    interactions \cite{muliya2026}. More than 100 elephants are killed each year in retaliatory
+    actions, creating a feedback loop that drives further illegal persecution \cite{muliya2026}.
+
+    The human dimension of HWC is not limited to physical and economic losses. Research
+    drawing on a systematic review of 124 global perception studies identifies that community
+    attitudes toward wildlife are a critical determinant of conservation outcomes \cite{basak2023}.
+    In urbanising areas adjacent to protected areas, human perceptions of wildlife range from
+    appreciation to fear and even hatred, and these perceptions are shaped not only by direct
+    experience but by cultural norms, historical encounters, and the perceived fairness of
+    government responses to losses \cite{basak2023}. Negative perceptions --- where animals are
+    seen primarily as threats --- undermine community willingness to participate in conservation
+    and increase tolerance for retaliatory killings. In Kajiado County, historical patterns of
+    Maasai coexistence with wildlife have been disrupted by increasing livestock predation and
+    inadequate government response, driving retaliatory killing of predators and a deterioration
+    of human-wildlife relations \cite{mbiki2025}. The frequency with which wildlife is perceived
+    in urban and peri-urban landscapes, and the speed and fairness with which conflict-related
+    losses are compensated, have been identified as key moderators of community tolerance
+    \cite{basak2023,mbiki2025}. These findings establish that any technological intervention in
+    HWC management must be complemented by systems that address community perception
+    and restore confidence in wildlife governance.
+
+    \subsection{Current Mitigation Strategies and Their Limitations}
+
+    Wildlife managers globally have implemented a diverse portfolio of HWC mitigation
+    measures. These can be broadly categorised as: physical and chemical barriers such as
+    electrified fencing, chili-based deterrents, and beehive fences; compensation and
+    ex-gratia schemes; community-based vigilance and early warning systems; and, as
+    interventions of last resort, translocation or lethal removal \cite{muliya2026}. Each approach
+    carries well-documented limitations that motivate the need for novel technological solutions.
+
+    Physical barriers are expensive to install and maintain and are subject to habituation,
+    particularly by intelligent megafauna such as elephants. In Kenya, the government has
+    extended wildlife fencing by 200\,km as part of a recent operational response to HWC,
+    while committing KES\,250\,million to the renovation of Meru Mulika Airstrip to boost
+    regional tourism as a strategy for creating economic incentives for conservation
+    \cite{kenya2025}. However, fencing cannot address the behaviour of habitual trespassers that
+    have already learned to exploit human settlements, as these animals actively seek out
+    gaps and weaknesses in barrier systems. Evidence from Laikipia County, where large-scale
+    private ranches secured by electrified fencing reported fewer HWC incidents than the
+    unfenced Kajiado landscape, supports the effectiveness of physical barriers where they can
+    be fully maintained; however, this model is not scalable across most community and
+    rangeland environments \cite{manoa2020}.
+
+    Compensation schemes address economic grievances but do not prevent recurrence, and
+    their effectiveness is severely undermined when payments are delayed or denied. In Kenya,
+    the government's own acknowledgement that victims waited up to eight years for
+    compensation between 2013 and 2022 illustrates the systemic dysfunction of previous
+    arrangements \cite{kenya2025}. Research confirms that delayed or unpaid compensation
+    significantly worsens community attitudes toward wildlife, generating hostility and
+    increasing the likelihood of retaliatory killings \cite{basak2023,manoa2020}. In Kajiado and
+    Laikipia Counties, 4,722 compensation claims were deferred nationally during the
+    2014--2017 period due to missing documentation and insufficient funds, compounding
+    community anger \cite{manoa2020}. Kenya's 2025 policy reforms --- including the migration
+    to a digital compensation platform, a 90-day reporting mandate, and a target of payment
+    within four months --- represent a significant institutional improvement \cite{kenya2025}, but
+    do not address the upstream problem of preventing conflict incidents from occurring.
+
+    Translocation of conflict-prone animals is extensively documented as problematic: elephants
+    are highly intelligent, socially complex organisms whose translocation disrupts critical social
+    networks, causes psychological distress, and frequently triggers homing behaviour, with
+    displaced individuals navigating hazardous anthropogenic landscapes to return to their
+    original ranges --- effectively displacing rather than resolving conflict \cite{muliya2026}.
+    Non-lethal deterrents such as beehive fences and chili fences have shown localised
+    effectiveness \cite{mbiki2025}, but require sustained community maintenance and do not
+    address the behaviour of confirmed habitual trespassers. Community education campaigns
+    that highlight the ecological and economic benefits of wildlife, including the link between
+    wildlife conservation and tourism revenue, have been effective in shifting perceptions in
+    some contexts \cite{mbiki2025,basak2023}, but operate on timescales too slow to address
+    immediate conflict events.
+
+    Chemical immobilization remains the standard intervention for the safe capture of conflict
+    animals, using dart projectors, blowpipe CO\textsubscript{2}-powered rifles, and projectile
+    syringes loaded with veterinary sedatives such as etorphine hydrochloride or xylazine
+    hydrochloride. The Kodagu programme employed trained veterinarians using etorphine
+    hydrochloride (7--11\,mg depending on age and sex) facilitated by trained kumki elephants
+    for safe positioning during sedation \cite{muliya2026}. While effective when conditions
+    permit, this approach is limited by the logistical prerequisites of deploying trained personnel
+    with specialised equipment in often remote terrain, close to a potentially aggressive animal.
+    Response delays ranging from several hours to several years are common when managing
+    multiple conflict individuals, and throughout these delays, casualties accumulate on both
+    sides.
+
+    \subsection{GPS Satellite Telemetry, Low-Cost Tracking, and Early Warning Systems}
+
+    Satellite telemetry has substantially enhanced the capacity of wildlife managers to monitor
+    conflict-prone animals in near real time and disseminate pre-emptive alerts to communities.
+    Muliya et al.\ describe a landmark Early Warning System (EWS) implemented by the Wildlife
+    Institute of India (WII) and the Karnataka Forest Department (KFD) in the coffee
+    agroforestry landscapes of Kodagu district \cite{muliya2026}. Between 2019 and 2022,
+    25 advanced satellite collars equipped with Iridium satellite transmitters were deployed
+    on conflict-prone elephants, including six matriarchs representing herds of approximately
+    90\,individuals and five lone tuskers responsible for known human fatalities. These
+    programmable collars transmitted location data at frequencies of 5\,minutes to 24\,hours,
+    enabling wildlife managers to track elephant movements in near real time.
+
+    The resulting EWS disseminated telemetry data through multiple channels: rapid response
+    teams for immediate conflict mitigation, local community alert networks, and research
+    biologists for ecological study \cite{muliya2026}. Communities that previously advocated for
+    elephant removal began actively supporting collaring programmes. Real-time tracking
+    enabled coordinated Rapid Response Teams (RRTs) to drive elephants away from
+    settlements, enforce temporary activity restrictions, and facilitate preventive evacuations.
+    The programme accumulated approximately 104,764 elephant location points over
+    4,516\,observation days, enabling predictive conflict risk mapping \cite{muliya2026}.
+    However, the system retains a critical dependency on human intervention: detection of
+    boundary crossing must be followed by mobilisation and deployment of field personnel before
+    any physical intervention occurs. This step from detection to immobilization remains entirely
+    dependent on human response time --- the gap this research seeks to close.
+
+    A parallel body of work has demonstrated that the cost barrier to GPS-based wildlife
+    tracking can be substantially reduced without sacrificing positional accuracy. Im\-a\-mo\u{g}lu
+    and Ta\c{s} developed an Arduino-based GPS tracking collar (FiT-SMART Collar\,2.0) at a
+    total hardware cost of \euro{}92 --- compared to approximately \euro{}400 for commercial
+    equivalents such as the Garmin T5 \cite{imamoglu2022}. The device integrates a GPS module,
+    GSM data transmission, MicroSD local storage, and a real-time clock module for
+    configurable recording intervals, achieving positional accuracy within 2--3\,m of an
+    industrial RTK-GPS benchmark during vehicle-based trials \cite{imamoglu2022}. Crucially,
+    the GSM module enables real-time location data to be received as a Google Maps link via
+    SMS from any location with cellular coverage, making the platform practically deployable
+    in the field conditions typical of Kenyan rangeland counties. The authors identify
+    battery life --- reduced to approximately 48\,hours under continuous GSM operation ---
+    as the primary engineering limitation for long-term field deployment, and propose
+    a remotely releasable collar design via servo motor as a future development
+    \cite{imamoglu2022}. This low-cost platform is directly relevant to the proposed research:
+    the GPS and GSM architecture of FiT-SMART Collar\,2.0 constitutes a validated, accessible
+    foundation for the geofence trigger mechanism of the proposed immobilization device, and
+    demonstrates that such technology can be made economically viable for wildlife agencies
+    in lower-income settings.
+
+    Related work in Kenya has shown that GSM-enabled radio collars can notify rangers in near
+    real time when elephants cross into human-occupied areas, with approximately three-quarters
+    of users taking pre-emptive actions upon receiving alerts (Graham et al., 2012, as cited in
+    \cite{muliya2026}). In Sri Lanka, elephants have been fitted with aversive geofencing devices
+    to manage their movements within virtual boundaries, representing the closest existing
+    wildlife-domain analogue to the proposed device, though relying on aversive conditioning
+    rather than pharmacological immobilization (de Mel et al., 2023, as cited in
+    \cite{muliya2026}).
+
+    \subsection{Virtual Fencing: Technology, Mechanisms, and Conservation Applications}
+
+    Virtual fencing refers to GPS-enabled collar systems that enforce spatial boundaries for
+    free-ranging animals using graduated sensory stimuli rather than physical barriers.
+    Originally developed for livestock management, virtual fencing has evolved substantially
+    and is now receiving growing recognition as a conservation tool across rangelands
+    \cite{gilbert2026}. The technology enforces digital boundaries using GPS collars that
+    deliver a warning sound when boundaries are approached, backed by a mild physical
+    stimulus if the sound is ignored \cite{gilbert2026}. The standard design uses
+    radio-frequency base stations or cellular networks to transmit collar locations to a digital
+    platform via satellites, where animals' positions are precisely tracked and automatically
+    compared to virtual boundaries. Warning sounds are delivered with directional cues so
+    animals can ``hear'' which side the virtual fence is on, analogous to spatial orientation
+    within herds \cite{gilbert2026}.
+
+    A key feature relevant to the proposed research is the training period during which animals
+    learn to respond to the warning sound alone, reducing the frequency of physical stimulus
+    delivery. Research has found that stress responses of livestock to virtual fencing collars
+    are low and comparable to those of physical fences, with precision training schedules
+    ensuring animals rarely experience physical stimuli \cite{gilbert2026}. This demonstrated
+    biocompatibility and behavioural efficacy of GPS collar-based management devices is
+    directly informative for the proposed sedative delivery device.
+
+    Gilbert identifies four primary current conservation functions of virtual fencing:
+    substituting for physical fences to improve landscape connectivity; concentrating livestock
+    to enhance habitat and reduce wildlife conflict; timing livestock rotations to improve habitat
+    heterogeneity; and excluding livestock from sensitive areas \cite{gilbert2026}. Two further
+    potential applications are identified: improving administration of conservation grazing
+    programmes and rewarding ``conservation mode'' behaviour within software platforms. The
+    technology has been piloted at multiple locations across the western United States, with
+    projects testing livestock-carnivore conflict reduction, protection of riparian corridors,
+    and invasive plant management.
+
+    Particularly relevant for the proposed research, Gilbert notes that virtual fencing collars
+    could enable ranchers to move cattle away from conflict risk areas when large carnivores
+    are nearby, and that camera traps with edge computing are now capable of near real-time
+    species detection that could trigger virtual fence boundary changes \cite{gilbert2026}. This
+    convergence of geofencing with conflict risk detection is the direct conceptual antecedent
+    of the proposed wildlife immobilization device, in which GPS geofence crossing by a conflict
+    animal would trigger autonomous sedative delivery rather than a deterrent stimulus. Gilbert
+    also documents limitations informative for device design: GPS accuracy can degrade in
+    densely vegetated terrain, increasing animal welfare concerns; device retention across
+    varying body conditions must be considered; and fail-safe mechanisms are essential to
+    prevent inadvertent discharge \cite{gilbert2026}.
+
+    \subsection{BioMEMS Devices: Materials, Architectures, and Implantable Drug Delivery}
+
+    The field of Biomedical Microelectromechanical Systems (BioMEMS) encompasses
+    microscale systems that integrate biosensors, actuators, microfluidics, wireless
+    communication, and signal processing within compact, biocompatible platforms for use in
+    medical applications \cite{abhinav2025}. The BioMEMS industry is projected to reach
+    USD\,24.5\,billion by 2030, driven by rapid advances in miniaturised biomedical devices and
+    digital health platforms \cite{abhinav2025}. BioMEMS devices broadly fall into two
+    categories: wearable systems for non-invasive external monitoring, and implantable systems
+    that work within the body for continuous internal sensing, targeted drug delivery, and
+    neurostimulation \cite{abhinav2025}. For the proposed wildlife device, implantable BioMEMS
+    architectures are of primary relevance.
+
+    The selection of appropriate materials is fundamental to implantable BioMEMS performance
+    and longevity. Abhinav et al.\ provide a comprehensive taxonomy of materials for BioMEMS
+    applications, covering synthetic polymers, biodegradable and bioresorbable materials,
+    natural polymers, and hybrid materials \cite{abhinav2025}. Polydimethylsiloxane (PDMS) is
+    noted for its outstanding chemical stability, biocompatibility, and optical transparency,
+    making it well suited for flexible substrates in implantable sensors. Polyimide offers
+    exceptional mechanical strength (tensile strength $78.3 \pm 7.3$\,MPa) combined with
+    high-temperature stability and excellent electrical insulation, making it ideal for neural
+    electrodes and structural components in implantable devices \cite{abhinav2025}. Parylene\,C
+    provides low water absorption (0.1\,\% after 24\,hours), high biocompatibility and
+    hemocompatibility, and can be deposited as ultra-thin, defect-free protective coatings for
+    implantable electronics \cite{abhinav2025}. Biodegradable polymers such as polylactic acid
+    (PLA) and poly(lactic-co-glycolic acid) (PLGA) are of particular interest for drug delivery
+    applications, as they degrade safely in vivo and can be formulated to control drug release
+    kinetics over timescales ranging from days to months \cite{abhinav2025}. These material
+    considerations directly inform the enclosure design, drug reservoir, and coating strategy
+    for the proposed wildlife immobilization device.
+
+    Implantable drug delivery systems represent one of the most clinically advanced
+    applications of BioMEMS. The concept of implantable drug delivery was first introduced
+    by Blackshear (1979), who explored subcutaneous drug-releasing implants and infusion
+    pumps for continuous release, as documented by Abhinav et al.\ \cite{abhinav2025}. Since
+    then, significant advances in microfabrication and MEMS technology have enabled the
+    development of highly sophisticated implantable drug delivery systems (IDDSs). Abhinav
+    et al.\ document a range of commercially deployed and research-stage systems, including
+    the Medtronic Synchromed\,II programmable pump for chronic pain and spasticity
+    management; MicroCHIPS Biotech MEMS-based microchip implants for wireless drug
+    delivery; and research platforms combining nanochannel delivery membranes with
+    Bluetooth Low Energy (BLE) control for chronic disease management \cite{abhinav2025}.
+    Key challenges for implantable drug delivery identified by Abhinav et al.\ include energy
+    supply (battery life and recharging), long-term biocompatibility against biofouling and
+    inflammatory responses, regulatory complexity, data security, and device
+    miniaturization --- all of which must be addressed in the design of the proposed wildlife
+    device \cite{abhinav2025}.
+
+    The integration of BioMEMS with artificial intelligence (AI) and the Internet of Things
+    (IoT) is further enhancing the field by enabling closed-loop, data-driven therapeutic
+    delivery that responds to real-time physiological conditions \cite{abhinav2025}. AI algorithms
+    can analyse physiological data to predict adverse events and personalise treatment
+    regimens, while IoT connectivity enables remote monitoring and real-time alerts. For the
+    proposed wildlife device, this paradigm translates directly: GPS location data from the
+    implanted device can be relayed wirelessly to a ranger management platform, enabling
+    real-time tracking of immobilized animals and integration with broader landscape-level
+    HWC management systems.
+
+    \subsection{Implantable Drug Delivery: Biocompatibility Evidence from Animal Models}
+
+    The specific technical feasibility of an implantable, electrolytically actuated drug delivery
+    device in a large animal model has been rigorously demonstrated by Guti\'errez-Hern\'andez
+    et al.\ in a one-year feasibility study of the Replenish Posterior MicroPump \cite{gutierrez2014}.
+    This novel bioelectronic MEMS device was developed for intravitreal drug delivery in
+    chronic ocular disease and exemplifies the class of compact, battery-powered, programmable
+    drug reservoirs that form the technical core of the proposed wildlife device. The MicroPump
+    houses a rechargeable battery, a drug reservoir with a refill port, electronics, and an
+    electrolysis chamber. Upon activation, electrolytic water splitting generates hydrogen and
+    oxygen gas, and the resulting pressure deforms a membrane, forcing the drug from the
+    reservoir through a cannula into the target site at a precisely preprogrammed microdose
+    volume. The device is designed to last more than five years before requiring replacement
+    \cite{gutierrez2014}.
+
+    The feasibility study enrolled thirteen beagle dogs (11\,experimental, 2\,control), following
+    animals for up to one year post-implantation. Ophthalmic examination and imaging revealed
+    no clinically significant pathological changes, no significant inflammatory reaction, and no
+    tissue ingrowth at the sclerotomy site \cite{gutierrez2014}. Histological evaluation showed
+    only mild chronic inflammatory cell infiltration and a thin fibrous capsule around the device,
+    consistent with the standard foreign body response to any implanted device and comparable
+    to findings with established glaucoma drainage devices. No retinal toxic changes, no retinal
+    pigment epithelium degeneration, and no evidence of fibrous ingrowth at the cannula site
+    were observed. These findings confirm that an electrolytic MEMS micropump --- with a
+    biocompatible polymer enclosure, drug reservoir, pressure-driven delivery mechanism, and
+    percutaneous cannula --- can be maintained safely in a large animal for one year. While
+    designed for a specialised ocular application, the core engineering principles ---
+    miniaturisation, programmable activation, electrolytic pumping, and biocompatible materials
+    --- are directly transferable to a subcutaneous sedative delivery device for wildlife
+    management.
+
+    \subsection{Fully Implantable Drug Delivery with Non-Invasive Refilling: The PILLSID System}
+
+    A critical practical challenge for a long-term wildlife immobilization device is the need to
+    replenish the drug reservoir without requiring surgical re-capture of the animal or
+    explantation of the device. Iacovacci et al.\ address this challenge directly in their
+    description of PILLSID (PILl-refiLled implanted System for Intraperitoneal Delivery), a
+    fully implantable robotic device for programmable intraperitoneal drug delivery that is
+    refilled through ingestible magnetic capsules \cite{iacovacci2021}. PILLSID was designed to
+    restore blood glucose homeostasis in patients with type\,1 diabetes, but its engineering
+    principles have broad applicability to any scenario requiring long-term implantable drug
+    delivery with periodic reservoir replenishment.
+
+    PILLSID is implanted in an extraperitoneal pouch fashioned between the costal margin and
+    the iliac crest and delivers the target drug through an intraperitoneal catheter. The
+    refilling procedure involves the oral ingestion of a drug-loaded magnetic capsule, which is
+    passively transported along the gastrointestinal system until it reaches the implant and is
+    magnetically docked by a magnetic switchable device (MSD). Once docked, a retractable
+    needle punctures the capsule and transfers the drug to the implanted reservoir; the capsule
+    is then released and naturally excreted \cite{iacovacci2021}. Once refilled, the device acts as
+    a programmable microinfusion pump for precise drug release, operated via a Bluetooth
+    communication protocol and a wirelessly rechargeable battery at the 13.56\,MHz medical
+    band. The complete prototype measures $78 \times 63 \times 35$\,mm and weighs 165\,g,
+    comparable in form factor to commercial implantable devices \cite{iacovacci2021}.
+
+    In vivo validation in a diabetic swine model demonstrated that the refilling mechanism
+    worked efficiently and that PILLSID could safely regulate blood glucose levels through
+    intraperitoneal insulin delivery \cite{iacovacci2021}. The device achieved a microinfusion
+    resolution of $3.18 \pm 0.30$\,$\mu$l regardless of time delay between consecutive injections
+    across repeated emptying cycles, confirming dose precision. Wireless power transfer
+    efficiency was demonstrated at $44 \pm 7$\,\% during in vivo validation in a curved
+    configuration, confirming the feasibility of transcutaneous recharging \cite{iacovacci2021}.
+    These results demonstrate that a fully implantable programmable drug pump can be
+    maintained in a large animal, wirelessly recharged, and non-invasively refilled without
+    surgical re-entry --- all capabilities directly relevant to a wildlife device that must remain
+    implanted across months or years of field deployment.
+
+    For the proposed wildlife immobilization device, the PILLSID paradigm suggests a viable
+    strategy for drug reservoir replenishment: a veterinarian could administer a drug-loaded
+    capsule to a collared animal (either orally or via a specially designed delivery system) to
+    refill the implanted sedative reservoir without requiring full anaesthetic recapture. This
+    would substantially extend the operational life of the device and reduce the logistical
+    burden of maintenance, particularly for wide-ranging conflict animals.
+
+    \subsection{Autonomous Closed-Loop Implantable Drug Delivery: The Naloximeter Paradigm}
+
+    The most directly analogous precedent for the proposed wildlife immobilization device is
+    the Naloximeter, described by Ciatti et al.\ in \textit{Science Advances} \cite{ciatti2024}.
+    The Naloximeter is a class of subcutaneously implanted devices developed to autonomously
+    detect opioid overdose and deliver naloxone (NLX) without bystander intervention. Opioid
+    overdose accounts for nearly 75,000 deaths per year in the United States, and its lethality
+    depends on opioid-induced respiratory depression progressing to fatal hypoxia within
+    minutes \cite{ciatti2024}. The Naloximeter circumvents the bystander requirement by
+    detecting overdose physiologically and executing a closed-loop rescue cascade autonomously.
+
+    The Naloximeter uses a dual-wavelength optical sensor (660\,nm and 880\,nm) to measure
+    tissue oxygenation (StO\textsubscript{2}) as a proxy for respiratory status. A multivariable
+    Overdose Detection Algorithm (ODA) analyses data --- including rate of change of
+    oxygenation, optical absorption, and motion index --- to detect overdose within 90\,seconds
+    of fentanyl administration and reject false positives during normal ambulation \cite{ciatti2024}.
+    Upon detection, the rescue cascade activates the drug delivery mechanism and relays an
+    emergency alert via Bluetooth Low Energy (BLE) and cellular communication to first
+    responders, with a user abort option as a fail-safe against false positives.
+
+    Two drug delivery embodiments were developed and tested. An intravenous version uses
+    electrolytic pumping (functionally analogous to the MicroPump) to drive NLX through an
+    indwelling catheter into the vasculature within 6\,minutes. An injector version uses a
+    motor-driven plunger to deliver NLX subcutaneously within 25\,seconds, with dual-injection
+    capability given that the potency of fentanyl analogues often requires multiple naloxone
+    doses \cite{ciatti2024}. Pharmacokinetic data from porcine models showed NLX appearing in
+    plasma within 1\,minute of pump activation. Survival studies in freely moving porcine models
+    demonstrated rescue from otherwise fatal fentanyl overdose with recovery to baseline
+    oxygenation within approximately 4.5--10\,minutes, compared to 23\,minutes for
+    self-recovery ($P < 0.0001$) \cite{ciatti2024}. The device showed no significant biomarkers
+    of cardiac damage post-activation, and catheters implanted for several weeks showed stable
+    pharmacokinetics comparable to infusion pump controls. Battery life was approximately
+    6.9\,days with wireless recharging demonstrated in porcine models.
+
+    For the proposed wildlife immobilization device, the Naloximeter provides the complete
+    template for closed-loop sensor-triggered autonomous drug delivery. The critical adaptation
+    is the substitution of the physiological overdose sensor with a GPS geofence trigger:
+    rather than monitoring tissue oxygenation for signs of respiratory depression, the device
+    would monitor the animal's GPS coordinates relative to a pre-defined virtual boundary and
+    initiate drug delivery upon crossing. This substitution is technically straightforward ---
+    compact GPS modules suitable for wildlife collar deployment are commercially available at
+    low cost, with demonstrated positional accuracy of 2--3\,m \cite{imamoglu2022} --- and is
+    the conceptually novel contribution of the proposed research. Veterinary sedatives with
+    well-characterised pharmacokinetic profiles (e.g., etorphine, medetomidine, or
+    tiletamine-zolazepam combinations) would replace naloxone as the pharmacological
+    payload, dosed by species and estimated body mass. The Naloximeter also establishes the
+    viability of the emergency alert function, which in the wildlife context would notify ranger
+    teams of an immobilized animal's location, enabling safe recovery and transport.
+
+    \subsection{Synthesis: Converging Technologies and the Research Gap}
+
+    A structured review of the literature across eight interrelated domains --- HWC scale and
+    community impacts in Kenya and globally
+    \cite{muliya2026,manoa2020,mbiki2025,basak2023}, government policy and compensation
+    frameworks \cite{kenya2025}, GPS-enabled virtual geofencing for animal management
+    \cite{gilbert2026}, low-cost GPS tracking technology \cite{imamoglu2022}, BioMEMS
+    materials and device architectures \cite{abhinav2025}, implantable MEMS micropump
+    biocompatibility \cite{gutierrez2014}, non-invasive refilling of implantable drug delivery
+    systems \cite{iacovacci2021}, and autonomous closed-loop drug delivery \cite{ciatti2024}
+    --- reveals a clear convergence of enabling technologies. When integrated, these advances
+    could address the critical gap in current wildlife conflict management: the absence of an
+    autonomous, immediate immobilization mechanism at the moment of boundary crossing.
+
+    The empirical HWC record from Kenya establishes the urgency and species-specific
+    parameters of the problem \cite{manoa2020}. Elephant-dominated conflict, peaking in dry-season
+    months, produces the most severe human casualties and economic losses; yet these same
+    animals --- because of their intelligence and large home ranges --- are the most resistant to
+    conventional deterrence and the most logistically challenging to dart-tranquilize in a timely
+    manner. Community perception data establish that the speed and reliability of any response
+    mechanism is itself a determinant of conservation outcomes: communities that experience
+    rapid, credible intervention are more likely to support wildlife conservation \cite{basak2023},
+    and government investment in faster, more transparent HWC response systems reflects this
+    political reality \cite{kenya2025}.
+
+    The Kodagu EWS demonstrates that GPS satellite telemetry reliably tracks habitual
+    trespassers in complex landscapes, that satellite collars can be safely applied to conflict
+    megafauna, and that data-driven proactive management reduces HWC severity \cite{muliya2026}.
+    The FiT-SMART Collar platform demonstrates that the GPS and GSM architecture required
+    to implement geofence triggering can be assembled at a cost accessible to under-resourced
+    wildlife agencies \cite{imamoglu2022}. Virtual fencing demonstrates that GPS collar devices
+    can enforce spatial boundaries with graduated stimuli, that animals adapt to these devices
+    safely, and that the same GPS architecture used for tracking can trigger interventions rather
+    than merely alerts \cite{gilbert2026}. The BioMEMS review establishes the broad material,
+    energy, and engineering foundations --- biocompatible polymers, programmable
+    microactuators, wireless power transfer, closed-loop architectures --- that make
+    sophisticated miniaturised implantable devices feasible for long-term deployment
+    \cite{abhinav2025}. The MicroPump study establishes that an electrolytic MEMS drug pump
+    can be safely maintained in a large animal for one year with minimal adverse effects
+    \cite{gutierrez2014}. PILLSID demonstrates that a fully implantable programmable pump can
+    be wirelessly recharged and non-invasively refilled without surgical re-entry --- a critical
+    operational requirement for a device deployed in free-ranging wildlife \cite{iacovacci2021}.
+    The Naloximeter establishes conclusively that a closed-loop, sensor-triggered, implantable
+    drug delivery system can autonomously rescue a freely moving large animal from a
+    life-threatening event within minutes \cite{ciatti2024}.
+
+    Yet no existing study or device combines GPS geofence boundary-detection with autonomous
+    implantable sedative delivery for wildlife conflict management. Current GPS EWS programmes
+    detect boundary crossing but cannot initiate immobilization autonomously. Virtual fencing
+    deters animals but does not immobilize confirmed trespassers. Existing IDDSs are
+    programmed for fixed schedules or physiological triggers, not geospatial triggers. The
+    proposed research closes this gap by engineering a device at the intersection of these
+    converging technologies: a subcutaneously implantable, GPS-triggered, electrolytically
+    actuated sedative delivery system for habitual wildlife trespassers. The successful
+    realisation of this device would represent a paradigm shift from reactive to proactive HWC
+    management, eliminating the most dangerous phase of current practice --- the delay between
+    initial encroachment and ranger arrival --- and thereby reducing human casualties, crop
+    damage, animal deaths, and the erosion of conservation support in conflict-affected
+    communities.
+
+    % ══════════════════════════════════════════════════════════════════════════════
+
+
+    % ══════════════════════════════════════════════════════════════════════════════
+    \begin{thebibliography}{99}
+
+        \bibitem{muliya2026}
+        S.~K. Muliya, V.~Kolipakam, R.~K. Pandey, S.~Sharma, K.~Pushkar,
+        T.~C. Kuttappa, C.~C. Manjunath, U.~T. Bindhani, L.~Kawlni,
+        V.~R. Tiwari, and Q.~Qureshi,
+        ``Satellite-telemetry and mass communication based early warning system
+        for human-elephant coexistence in Southern India's agroforestry landscapes,''
+        \textit{Frontiers in Conservation Science}, vol.~6, p.~1640741, 2026.
+        doi: 10.3389/fcosc.2025.1640741
+
+        \bibitem{manoa2020}
+        D.~O. Manoa, F.~Mwaura, T.~Thenya, and S.~Mukhovi,
+        ``Comparative analysis of the typology, seasonality and economic cost of
+        human-wildlife conflict in Kajiado and Laikipia Counties, Kenya,''
+        \textit{East African Journal of Science, Technology and Innovation},
+        vol.~1, no.~4, pp.~1--16, Sep. 2020.
+        doi: 10.37425/eajsti.v1i4.188
+
+        \bibitem{mbiki2025}
+        S.~Mbiki,
+        ``The elephant in the room: Examining the complex human-wildlife conflict in Kenya,''
+        British Institute in Eastern Africa (BIEA), Feb. 2025. [Online].
+        Available: \url{https://biea.ac.uk/the-elephant-in-the-room-examining-the-complex-human-wildlife-conflict-in-kenya/}
+
+        \bibitem{basak2023}
+        S.~M. Basak, E.~Rostovskaya, J.~Birks, and I.~A. Wierzbowska,
+        ``Perceptions and attitudes to understand human-wildlife conflict in an urban
+        landscape --- A systematic review,''
+        \textit{Ecological Indicators}, vol.~151, p.~110319, 2023.
+        doi: 10.1016/j.ecolind.2023.110319
+
+        \bibitem{kenya2025}
+        Republic of Kenya, Office of the President,
+        ``Government steps up human-wildlife conflict response and compensation,''
+        Official Website of the President of the Republic of Kenya, May 2025.
+        [Online]. Available:
+        \url{https://www.president.go.ke/government-steps-up-human-wildlife-conflict-response-and-compensation/}
+
+        \bibitem{gilbert2026}
+        S.~Gilbert,
+        \textit{Virtual Fencing for Conservation: A Roadmap for Making Rangelands
+            Work Better for Livestock and Wildlife}.
+        Bozeman, MT: Property and Environment Research Center (PERC), 2026.
+        [Online]. Available: \url{https://perc.org/VirtualRoadmap}
+
+        \bibitem{imamoglu2022}
+        A.~F. \.{I}mamo\u{g}lu and \.{I}.~Ta\c{s},
+        ``Preliminary application of a low-cost smart collar developed for wild animal tracking,''
+        \textit{European Journal of Forest Engineering}, vol.~8, no.~1, pp.~35--39, 2022.
+        doi: 10.33904/ejfe.1131931
+
+        \bibitem{gutierrez2014}
+        J.~C. Guti\'errez-Hern\'andez, S.~Caffey, W.~Abdallah, P.~Calvillo,
+        R.~Gonz\'alez, J.~Shih, J.~Brennan, J.~Zimmerman,
+        J.~C. Mart\'inez-Camarillo, A.~R. Rodriguez, R.~Varma, A.~Santos,
+        G.~S\'anchez, and M.~Humayun,
+        ``One-year feasibility study of Replenish MicroPump for intravitreal drug
+        delivery: A pilot study,''
+        \textit{Translational Vision Science and Technology}, vol.~3, no.~3,
+        Art. no.~8, 2014.
+        doi: 10.1167/tvst.3.3.8
+
+        \bibitem{iacovacci2021}
+        V.~Iacovacci, I.~Tamadon, E.~F. Kauffmann, S.~Pane, V.~Simoni,
+        L.~Marziale, M.~Aragona, L.~Cobuccio, M.~Chiarugi, P.~Dario,
+        S.~Del Prato, L.~Ricotti, F.~Vistoli, and A.~Menciassi,
+        ``A fully implantable device for intraperitoneal drug delivery refilled
+        by ingestible capsules,''
+        \textit{Science Robotics}, vol.~6, no.~57, p.~eabh3328, 2021.
+        doi: 10.1126/scirobotics.abh3328
+
+        \bibitem{ciatti2024}
+        J.~L. Ciatti, A.~V\'azquez-Guardado, V.~E. Brings, J.~Park,
+        B.~Ruyle, R.~A. Ober, A.~J. McLuckie, M.~R. Talcott, E.~A. Carter,
+        A.~R. Burrell, R.~A. Sponenburg, J.~Trueb, P.~Gupta, J.~Kim,
+        R.~Avila, M.~Seong, R.~A. Slivicki, M.~A. Kaplan,
+        B.~Villalpando-Hernandez, N.~Massaly, M.~C. Montana, M.~Pet,
+        Y.~Huang, J.~A. Mor\'on, R.~W. Gereau IV, and J.~A. Rogers,
+        ``An autonomous implantable device for the prevention of death from
+        opioid overdose,''
+        \textit{Science Advances}, vol.~10, p.~eadr3567, 2024.
+        doi: 10.1126/sciadv.adr3567
+
+        \bibitem{abhinav2025}
+        V.~Abhinav, P.~Basu, S.~S. Verma, J.~Verma, A.~Das, S.~Kumari,
+        P.~R. Yadav, and V.~Kumar,
+        ``Advancements in wearable and implantable BioMEMS devices: Transforming
+        healthcare through technology,''
+        \textit{Micromachines}, vol.~16, no.~5, p.~522, 2025.
+        doi: 10.3390/mi16050522
+
+    \end{thebibliography}
+
+\end{document}
